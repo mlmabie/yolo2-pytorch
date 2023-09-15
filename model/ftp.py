@@ -56,7 +56,23 @@ class FusedTilePartitioner:
         pass  # Implement this method
 
     def create_input_tile(self, output_tile, l):
-        pass  # Implement this method
+        tile = TileDimensions()
+
+        if l.type == 'CONVOLUTIONAL':
+            tile.startw = max((output_tile.startw * l.stride) - (l.size // 2), 0)
+            tile.endw = min((output_tile.endw * l.stride) + (l.size // 2), l.w - 1)
+            tile.starth = max((output_tile.starth * l.stride) - (l.size // 2), 0)
+            tile.endh = min((output_tile.endh * l.stride) + (l.size // 2), l.h - 1)
+        elif l.type == 'MAXPOOL':
+            tile.startw = output_tile.startw * l.stride
+            tile.endw = output_tile.endw * l.stride + l.stride - 1
+            tile.starth = output_tile.starth * l.stride
+            tile.endh = output_tile.endh * l.stride + l.stride - 1
+
+        tile.width = tile.endw - tile.startw + 1
+        tile.height = tile.endh - tile.starth + 1
+
+        return tile
 
     def crop_data(self, dims, layerh, layerw, layerc, data, len):
         pass  # Implement this method
