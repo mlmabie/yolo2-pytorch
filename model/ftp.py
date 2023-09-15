@@ -9,8 +9,16 @@ class TileDimensions:
         self.height = self.endh - self.starth + 1
 
     def __str__(self):
-        return f"TileDimensions(startw={self.startw}, starth={self.starth}, endw={self.endw}, endh={self.endh}, width={self.width}, height={self.height})"
-
+        return (
+            f"TileDimensions(\n"
+            f"\tstartw={self.startw},\n"
+            f"\tstarth={self.starth},\n"
+            f"\tendw={self.endw},\n"
+            f"\tendh={self.endh},\n"
+            f"\twidth={self.width},\n"
+            f"\theight={self.height}\n"
+            ")"
+        )
 
 class LayerTile:
     def __init__(self):
