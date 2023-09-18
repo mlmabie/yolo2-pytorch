@@ -114,24 +114,24 @@ class FusedTilePartitioner:
 
         return tile
 
-    def crop_data_from_input(self, h, w, l, layerh, layerw, layerc, data, len):
-        return self.crop_data(self.tiles[h][w][l].input, layerh, layerw, layerc, data, len)
+    def crop_data_from_input(self, h, w, l, layerh, layerw, layerc, data, length):
+        return self.crop_data(self.tiles[h][w][l].input, layerh, layerw, layerc, data, length)
 
     def crop_data_from_relative(self, h, w, l, layerh, layerw, layerc, data, len):
-        input = self.tiles[h][w][l].input
+        tile_input = self.tiles[h][w][l].input
         output = self.tiles[h][w][l].output
         relative = TileDimensions()
-        relative.startw = output.startw - input.startw
+        relative.startw = output.startw - tile_input.startw
         relative.endw = relative.startw + (output.endw - output.startw)
-        relative.starth = output.starth - input.starth
+        relative.starth = output.starth - tile_input.starth
         relative.endh = relative.starth + (output.endh - output.starth)
         relative.width = relative.endw - relative.startw + 1
         relative.height = relative.endh - relative.starth + 1
 
-        return self.crop_data(relative, layerh, layerw, layerc, data, len)
+        return self.crop_data(relative, layerh, layerw, layerc, data, length)
 
     def crop_data(self, dims, layerh, layerw, layerc, data, len):
-        print(f"[ftp] cropping ({dims.starth},{dims.startw}) -> ({dims.endh},{dims.endw})")
+        logger.info(f"[ftp] cropping ({dims.starth},{dims.startw}) -> ({dims.endh},{dims.endw})")
 
         data_avg = 0
         cropped_avg = 0
@@ -148,7 +148,7 @@ class FusedTilePartitioner:
                     data_avg += data_idx
                     cropped_avg += cropped_idx
 
-        print(f"[ftp] dataIdx={data_avg} croppedIdx={cropped_avg}")
+        logger.info(f"[ftp] dataIdx={data_avg} croppedIdx={cropped_avg}")
 
         if len is not None:
             len[0] = nentries
@@ -182,5 +182,5 @@ class FusedTilePartitioner:
 
                     data_avg += data_idx
                     cropped_avg += cropped_idx
-        print(f"[ftp] dataIdx={data_avg} croppedIdx={cropped_avg}")
+        logger.info(f"[ftp] dataIdx={data_avg} croppedIdx={cropped_avg}")
         return cropped_data
